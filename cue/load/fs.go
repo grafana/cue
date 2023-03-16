@@ -167,6 +167,20 @@ func hasSubdir(root, dir string) (rel string, ok bool) {
 
 func (fs *fileSystem) readDir(path string) ([]os.FileInfo, errors.Error) {
 	path = fs.makeAbs(path)
+
+	if fi := fs.getDir(path, false); fi != nil {
+		items := make([]os.FileInfo, len(fi))
+		i := 0
+		for _, of := range fi {
+			items[i] = of
+			i++
+		}
+		sort.Slice(items, func(i, j int) bool {
+			return items[i].Name() < items[j].Name()
+		})
+		return items, nil
+	}
+	
 	m := fs.getDir(path, false)
 	items, err := ioutil.ReadDir(path)
 	if err != nil {
