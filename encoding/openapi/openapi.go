@@ -81,6 +81,15 @@ type Config struct {
 	// OpenAPI Schema. It is an error for an CUE value to refer to itself
 	// if this option is used.
 	ExpandReferences bool
+
+	// MaxCycleDepth specifies the maximum number of steps to search for structural
+	// cycles.
+	//
+	// This is a hack, not a general purpose solution to cycle detection. Use it
+	// with care. Set a value large enough to capture known use cases.
+	//
+	// NOTE This option does not exist in canonical cue-lang/cue.
+	MaxCycleDepth int
 }
 
 type Generator = Config

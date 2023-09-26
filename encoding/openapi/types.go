@@ -59,10 +59,17 @@ func extractFormat(v cue.Value) string {
 	}
 	var arg string
 
-	if op, a := v.Expr(); op == cue.CallOp {
+	op, a := v.Expr()
+
+	switch op {
+	case cue.CallOp:
 		v = a[0]
 		if len(a) == 2 {
 			arg = fmt.Sprintf(" (%v)", a[1].Eval())
+		}
+	case cue.OrOp:
+		if len(a) == 2 && a[1].Kind() == cue.NullKind {
+			v = a[0]
 		}
 	}
 
